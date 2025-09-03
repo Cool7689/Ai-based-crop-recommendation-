@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const weatherController = require('../controllers/weatherController');
-const authMiddleware = require('../middleware/auth');
+const { auth: authMiddleware } = require('../middleware/auth');
 
 // Weather data routes
 router.get('/current/:location', weatherController.getCurrentWeather);

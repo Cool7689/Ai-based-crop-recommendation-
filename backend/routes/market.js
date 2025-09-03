@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const marketController = require('../controllers/marketController');
-const authMiddleware = require('../middleware/auth');
+const { auth: authMiddleware } = require('../middleware/auth');
 
 // Market data routes
 router.get('/prices/:crop', marketController.getCropPrices);

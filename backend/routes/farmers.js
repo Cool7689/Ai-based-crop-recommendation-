@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const farmerController = require('../controllers/farmerController');
-const authMiddleware = require('../middleware/auth');
+const { auth: authMiddleware } = require('../middleware/auth');
 
 // Public routes (registration and login)
 router.post('/register', farmerController.registerFarmer);
