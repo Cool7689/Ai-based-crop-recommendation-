@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import VoiceInput from '../components/VoiceInput';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import { 
   Send, 
   Mic, 
@@ -20,6 +23,7 @@ import {
 
 const Chat = () => {
   const { user, logout } = useAuth();
+  const { t, language } = useLanguage();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -44,7 +48,7 @@ const Chat = () => {
     try {
       const response = await axios.post('/api/chat/session', {
         title: 'New Chat Session',
-        language: user?.preferredLanguage || 'English'
+        language: language || user?.preferredLanguage || 'English'
       });
       setSessionId(response.data.data.sessionId);
       
@@ -124,6 +128,15 @@ const Chat = () => {
     }
   };
 
+  const handleVoiceInput = (transcript) => {
+    setInputMessage(transcript);
+  };
+
+  const handleVoiceOutput = (message) => {
+    // This will be handled by the VoiceInput component
+    return message;
+  };
+
   const getCurrentSeason = () => {
     const month = new Date().getMonth() + 1;
     if (month >= 6 && month <= 9) return 'Kharif';
@@ -180,7 +193,7 @@ const Chat = () => {
                 className="flex items-center w-full px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100"
               >
                 <Home className="w-5 h-5 mr-3" />
-                Dashboard
+                {t('dashboard')}
               </button>
             </li>
             <li>
@@ -189,7 +202,7 @@ const Chat = () => {
                 className="flex items-center w-full px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100"
               >
                 <Search className="w-5 h-5 mr-3" />
-                Crop Search
+                {t('crops')}
               </button>
             </li>
             <li>
@@ -198,7 +211,7 @@ const Chat = () => {
                 className="flex items-center w-full px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100"
               >
                 <Cloud className="w-5 h-5 mr-3" />
-                Weather
+                {t('weather')}
               </button>
             </li>
             <li>
@@ -207,7 +220,7 @@ const Chat = () => {
                 className="flex items-center w-full px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100"
               >
                 <TrendingUp className="w-5 h-5 mr-3" />
-                Market
+                {t('market')}
               </button>
             </li>
             <li>
@@ -216,7 +229,7 @@ const Chat = () => {
                 className="flex items-center w-full px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100"
               >
                 <UserIcon className="w-5 h-5 mr-3" />
-                Profile
+                {t('profile')}
               </button>
             </li>
           </ul>
@@ -228,7 +241,7 @@ const Chat = () => {
             className="flex items-center w-full px-3 py-2 text-red-600 rounded-lg hover:bg-red-50"
           >
             <LogOut className="w-5 h-5 mr-3" />
-            Logout
+            {t('logout')}
           </button>
         </div>
       </div>
@@ -239,10 +252,11 @@ const Chat = () => {
         <div className="bg-white shadow-sm border-b p-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-semibold text-gray-800">AI Chat Assistant</h1>
+              <h1 className="text-xl font-semibold text-gray-800">{t('chat')} Assistant</h1>
               <p className="text-sm text-gray-600">Get personalized farming advice</p>
             </div>
             <div className="flex items-center space-x-2">
+              <LanguageSwitcher />
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               <span className="text-sm text-gray-600">AI Online</span>
             </div>
@@ -318,20 +332,13 @@ const Chat = () => {
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Type your message here..."
+                placeholder={t('typeMessage')}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                 rows="1"
                 disabled={isLoading}
               />
             </div>
             <div className="flex space-x-2">
-              <button
-                onClick={toggleVoiceInput}
-                className={`p-3 rounded-lg ${isListening ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'} hover:bg-gray-200 transition-colors`}
-                disabled={isLoading}
-              >
-                {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-              </button>
               <button
                 onClick={sendMessage}
                 disabled={!inputMessage.trim() || isLoading}
@@ -341,9 +348,18 @@ const Chat = () => {
               </button>
             </div>
           </div>
-          <p className="text-xs text-gray-500 mt-2">
-            Press Enter to send, Shift+Enter for new line
-          </p>
+          
+          {/* Voice Input/Output Controls */}
+          <div className="mt-3 flex items-center justify-between">
+            <VoiceInput 
+              onVoiceInput={handleVoiceInput}
+              onVoiceOutput={handleVoiceOutput}
+              message={messages.length > 0 ? messages[messages.length - 1]?.content : ''}
+            />
+            <p className="text-xs text-gray-500">
+              Press Enter to send, Shift+Enter for new line
+            </p>
+          </div>
         </div>
       </div>
     </div>

@@ -20,7 +20,8 @@
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.24",
     "framer-motion": "^10.12.16",
-    "react-dropzone": "^14.2.3"
+    "react-dropzone": "^14.2.3",
+    "react-speech-recognition": "^3.10.0"
   },
   "scripts": {
     "start": "react-scripts start",

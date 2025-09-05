@@ -68,7 +68,7 @@ router.post('/recommend', async (req, res) => {
 // Chat response
 router.post('/chat', async (req, res) => {
   try {
-    const { message, sessionContext } = req.body;
+    const { message, sessionContext, language } = req.body;
 
     if (!message) {
       return res.status(400).json({
@@ -78,7 +78,7 @@ router.post('/chat', async (req, res) => {
       });
     }
 
-    const response = await aiService.chatResponse(message, sessionContext || {});
+    const response = await aiService.chatResponse(message, sessionContext || {}, language || 'English');
 
     res.status(200).json({
       success: true,

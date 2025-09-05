@@ -106,9 +106,9 @@ class AIService {
     }
   }
 
-  async generateRecommendation(context, farmerData, weatherData, marketData) {
+  async generateRecommendation(context, farmerData, weatherData, marketData, language = 'English') {
     try {
-      const cacheKey = `recommendation_${JSON.stringify(context)}_${JSON.stringify(farmerData)}`;
+      const cacheKey = `recommendation_${JSON.stringify(context)}_${JSON.stringify(farmerData)}_${language}`;
       const cached = this.cache.get(cacheKey);
       
       if (cached) {
@@ -125,7 +125,9 @@ class AIService {
         .join('\n\n')
         .slice(0, parseInt(process.env.MAX_CONTEXT_LENGTH) || 4000);
 
-      const systemPrompt = `You are an expert agricultural advisor helping farmers choose the best crops for their land. 
+      const languageInstructions = this.getLanguageInstructions(language);
+
+      const systemPrompt = `You are an expert agricultural advisor helping farmers choose the best crops for their land. ${languageInstructions} 
 
 Use the following information to provide personalized recommendations:
 
@@ -214,9 +216,11 @@ Be specific, practical, and consider the farmer's local conditions.`;
     }
   }
 
-  async chatResponse(message, sessionContext) {
+  async chatResponse(message, sessionContext, language = 'English') {
     try {
-      const systemPrompt = `You are an AI agricultural assistant helping farmers with crop-related questions. 
+      const languageInstructions = this.getLanguageInstructions(language);
+      
+      const systemPrompt = `You are an AI agricultural assistant helping farmers with crop-related questions. ${languageInstructions}
 
 You have access to:
 - Crop knowledge base
@@ -279,6 +283,17 @@ Respond in a conversational, helpful manner.`;
       console.error('❌ Error adding to knowledge base:', error);
       throw error;
     }
+  }
+
+  getLanguageInstructions(language) {
+    const instructions = {
+      'English': 'Respond in English.',
+      'Hindi': 'Respond in Hindi (हिंदी). Use Devanagari script.',
+      'Telugu': 'Respond in Telugu (తెలుగు). Use Telugu script.',
+      'Tamil': 'Respond in Tamil (தமிழ்). Use Tamil script.'
+    };
+    
+    return instructions[language] || instructions['English'];
   }
 
   getStats() {

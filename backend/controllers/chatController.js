@@ -1,6 +1,7 @@
 const ChatSession = require('../models/ChatSession');
 const Farmer = require('../models/Farmer');
 const { v4: uuidv4 } = require('uuid');
+const fetch = require('node-fetch');
 
 // Create a new chat session
 const createSession = async (req, res) => {
@@ -186,9 +187,41 @@ const sendMessage = async (req, res) => {
     // Add user message
     await session.addMessage('user', content, metadata);
 
-    // TODO: Process with AI and get response
-    // For now, send a simple acknowledgment
-    const aiResponse = `Thank you for your message: "${content}". I'm here to help you with crop recommendations. Please provide more details about your location, soil type, and preferences for better suggestions.`;
+    // Get farmer data for AI context
+    const farmer = await Farmer.findById(farmerId);
+    
+    // Call AI service for response
+    let aiResponse;
+    try {
+      // Make request to AI service
+      const aiServiceUrl = process.env.AI_SERVICE_URL || 'http://localhost:5001';
+      const aiResponse_data = await fetch(`${aiServiceUrl}/api/ai/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: content,
+          sessionContext: {
+            farmer: farmer,
+            session: session,
+            currentSeason: getCurrentSeason()
+          },
+          language: session.language || 'English'
+        })
+      });
+
+      if (aiResponse_data.ok) {
+        const aiData = await aiResponse_data.json();
+        aiResponse = aiData.response || aiData.data?.response;
+      } else {
+        throw new Error('AI service error');
+      }
+    } catch (error) {
+      console.error('AI service error:', error);
+      // Fallback response
+      aiResponse = `Thank you for your message: "${content}". I'm here to help you with crop recommendations. Please provide more details about your location, soil type, and preferences for better suggestions.`;
+    }
 
     // Add AI response
     await session.addMessage('assistant', aiResponse);

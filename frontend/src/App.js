@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 import PrivateRoute from './components/PrivateRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -13,8 +14,9 @@ import Market from './pages/Market';
 
 function App() {
   return (
-    <AuthProvider>
-      <div className="min-h-screen bg-gray-50">
+    <LanguageProvider>
+      <AuthProvider>
+        <div className="min-h-screen bg-gray-50">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -49,8 +51,9 @@ function App() {
             </PrivateRoute>
           } />
         </Routes>
-      </div>
-    </AuthProvider>
+        </div>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }
 
