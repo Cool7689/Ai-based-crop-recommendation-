@@ -7,7 +7,7 @@
 
 > **An intelligent farming assistant that helps farmers choose the best crops using AI, voice commands, and multiple languages.**
 
-## ✨ Features
+## Features
 
 - 🤖 **AI-Powered Chat** - ChatGPT-style interface for farming advice
 - 🌱 **Smart Crop Recommendations** - Personalized suggestions based on soil, weather, and location
@@ -17,7 +17,7 @@
 - 📱 **Mobile-Friendly** - Responsive design for all devices
 - 🔐 **Secure Authentication** - JWT-based user management
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Node.js 18+ 
@@ -69,7 +69,7 @@ cd frontend && npm start
 5. **Access the application**
 Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -92,7 +92,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser
                     └─────────────────┘
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Component | Technology | Purpose |
 |-----------|------------|---------|
@@ -104,7 +104,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser
 | **Voice** | Web Speech API | Speech recognition |
 | **Languages** | React Context | Multi-language support |
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 magita/
@@ -130,7 +130,7 @@ magita/
 └── README.md              # This file
 ```
 
-## 🔑 API Keys Setup
+## API Keys Setup
 
 ### OpenAI API Key
 1. Visit [OpenAI Platform](https://platform.openai.com)
@@ -151,7 +151,7 @@ magita/
 3. Create a new cluster
 4. Get the connection string
 
-## 🚀 Deployment
+## Deployment
 
 ### Production Deployment
 
@@ -184,7 +184,7 @@ PORT=5001
 REACT_APP_API_URL=https://your-backend-url
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
@@ -194,7 +194,7 @@ REACT_APP_API_URL=https://your-backend-url
 | **Database errors** | Check MongoDB connection string |
 | **Authentication issues** | Verify JWT secret configuration |
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -202,18 +202,18 @@ REACT_APP_API_URL=https://your-backend-url
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [OpenAI](https://openai.com) for GPT-3.5-turbo
 - [OpenWeatherMap](https://openweathermap.org) for weather data
 - [React](https://reactjs.org) for the frontend framework
 - [Node.js](https://nodejs.org) for the backend runtime
 
-## 📞 Support
+## Support
 
 If you have any questions or need help:
 
