@@ -1,6 +1,6 @@
 # How to Deploy Your AI Crop Recommendation System Online (For Free!)
 
-Hey! 👋 
+Hey!
 
 So you want to put your AI Crop Recommendation System online? Great! This guide will walk you through deploying it completely free. No credit card needed, no monthly costs.
 
@@ -251,4 +251,4 @@ Farmers can now visit your website and get crop recommendations. Even though it'
 
 **Want to improve it?** The code is all there - feel free to add features!
 
-**Last updated**: December 2024
+**Last updated**: Sep 2025

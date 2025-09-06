@@ -206,12 +206,12 @@ Here are the main API endpoints you can use:
 Stores farmer information:
 ```javascript
 {
-  name: "John Doe",
-  email: "john@example.com",
+  name: "Surya",
+  email: "surya@email.com",
   phone: "+1234567890",
   location: {
-    state: "Punjab",
-    district: "Ludhiana"
+    state: "Andrapradesh",
+    district: "Kakinada"
   },
   farmDetails: {
     soilType: "clay",
@@ -232,12 +232,12 @@ Stores chat conversations:
     {
       role: "user",
       content: "What crops should I grow?",
-      timestamp: "2024-01-01T10:00:00Z"
+      timestamp: "2025-01-01T10:00:00Z"
     },
     {
       role: "assistant", 
       content: "Based on your soil type...",
-      timestamp: "2024-01-01T10:01:00Z"
+      timestamp: "2025-01-01T10:01:00Z"
     }
   ],
   context: {

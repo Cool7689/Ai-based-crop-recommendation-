@@ -8,7 +8,7 @@
 
 > **A FREE AI-powered farming assistant that helps farmers choose the best crops using local AI, voice commands, and multiple languages. No API keys required!**
 
-## ✨ Features
+## Features
 
 - 🤖 **FREE AI-Powered Chat** - ChatGPT-style interface with local AI (Ollama + Llama2)
 - 🌱 **Smart Crop Recommendations** - Personalized suggestions based on soil, weather, and location
@@ -19,7 +19,7 @@
 - 🔐 **Secure Authentication** - JWT-based user management
 - 💰 **Completely FREE** - No API keys, no monthly costs
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Option 1: Free Online Deployment (Recommended)
 
@@ -90,7 +90,7 @@ cd frontend && npm start
                     └─────────────────┘
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Component | Technology | Purpose |
 |-----------|------------|---------|
@@ -103,7 +103,7 @@ cd frontend && npm start
 | **Languages** | React Context | Multi-language support |
 | **Deployment** | Vercel + Railway | Free hosting |
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 magita/
@@ -131,7 +131,7 @@ magita/
 └── README.md               # This file
 ```
 
-## 🌐 Free Deployment
+## Free Deployment
 
 ### Why FREE?
 
@@ -157,7 +157,7 @@ magita/
 
 **See `DEPLOYMENT_GUIDE.md` for detailed instructions.**
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 
@@ -181,24 +181,13 @@ OLLAMA_MODEL=llama2
 BACKEND_URL=https://your-backend-url.railway.app
 ```
 
-## 🎯 Perfect for Hackathons
-
-- ✅ **No API keys required**
-- ✅ **Completely free to run**
-- ✅ **Real AI responses** (not just demo)
-- ✅ **Professional UI/UX**
-- ✅ **Mobile responsive**
-- ✅ **Multi-language support**
-- ✅ **Voice features**
-- ✅ **Ready to deploy**
-
-## 📚 Documentation
+## Documentation
 
 - **[DOCUMENTATION.md](DOCUMENTATION.md)** - Complete project documentation
 - **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Step-by-step deployment guide
 - **[Setup Scripts](setup-complete.sh)** - Automated local setup
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
@@ -208,7 +197,7 @@ BACKEND_URL=https://your-backend-url.railway.app
 | **Database errors** | Check MongoDB Atlas connection string |
 | **Deployment issues** | Check `DEPLOYMENT_GUIDE.md` |
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -216,11 +205,11 @@ BACKEND_URL=https://your-backend-url.railway.app
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Ollama](https://ollama.ai) for free local AI
 - [Llama2](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf) for AI model
@@ -228,7 +217,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Railway](https://railway.app) for free backend hosting
 - [MongoDB Atlas](https://cloud.mongodb.com) for free database
 
-## 💬 Support
+## Support
 
 If you have any questions:
 
@@ -240,5 +229,3 @@ If you have any questions:
 ---
 
 **⭐ Star this repository if you found it helpful!**
-
-**🚀 Ready for your hackathon? Deploy for FREE in minutes!**
