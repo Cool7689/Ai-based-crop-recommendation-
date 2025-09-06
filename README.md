@@ -10,14 +10,14 @@
 
 ## Features
 
-- 🤖 **FREE AI-Powered Chat** - ChatGPT-style interface with local AI (Ollama + Llama2)
-- 🌱 **Smart Crop Recommendations** - Personalized suggestions based on soil, weather, and location
-- 🎤 **Voice Commands** - Speak your questions, hear AI responses
-- 🌍 **Multi-Language Support** - English, Hindi, Telugu, Tamil
-- 📊 **Real-Time Data** - Live weather and market price information
-- 📱 **Mobile-Friendly** - Responsive design for all devices
-- 🔐 **Secure Authentication** - JWT-based user management
-- 💰 **Completely FREE** - No API keys, no monthly costs
+- **FREE AI-Powered Chat** - ChatGPT-style interface with local AI (Ollama + Llama2)
+- **Smart Crop Recommendations** - Personalized suggestions based on soil, weather, and location
+- **Voice Commands** - Speak your questions, hear AI responses
+- **Multi-Language Support** - English, Hindi, Telugu, Tamil
+- **Real-Time Data** - Live weather and market price information
+- **Mobile-Friendly** - Responsive design for all devices
+- **Secure Authentication** - JWT-based user management
+- **Completely FREE** - No API keys, no monthly costs
 
 ## Quick Start
 
@@ -67,27 +67,27 @@ cd frontend && npm start
 
 **Access:** [http://localhost:3000](http://localhost:3000)
 
-## 🏗️ Architecture
+## Architecture
 
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   React Frontend │    │  Node.js Backend │    │   AI Service    │
-│                 │    │                 │    │                 │
-│ • Chat Interface│◄──►│ • REST API      │◄──►│ • Ollama + Llama2│
-│ • Voice Controls│    │ • Authentication│    │ • FREE Local AI │
-│ • Multi-language│    │ • MongoDB       │    │ • No API Keys   │
-│ • Mobile UI     │    │ • Security      │    │ • Demo Fallback │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
+┌─────────────────┐    ┌─────────────────┐    ┌───────────────────┐
+│  React Frontend │    │ Node.js Backend │    │   AI Service      │
+│                 │    │                 │    │                   │
+│ • Chat Interface│◄──►│ • REST API      │◄──►│ • Ollama + Llama2 │
+│ • Voice Controls│    │ • Authentication│    │ • FREE Local AI   │
+│ • Multi-language│    │ • MongoDB       │    │ • No API Keys     │
+│ • Mobile UI     │    │ • Security      │    │ • Demo Fallback   │
+└─────────────────┘    └─────────────────┘    └───────────────────┘
          │                       │                       │
          └───────────────────────┼───────────────────────┘
                                  │
-                    ┌─────────────────┐
+                    ┌──────────────────┐
                     │  External APIs   │
-                    │                 │
+                    │                  │
                     │ • OpenWeatherMap │
                     │ • Market Data    │
                     │ • MongoDB Atlas  │
-                    └─────────────────┘
+                    └──────────────────┘
 ```
 
 ## Tech Stack
