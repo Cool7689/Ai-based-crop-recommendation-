@@ -1,13 +1,13 @@
-const OpenAI = require('openai');
+const axios = require('axios');
 const fs = require('fs-extra');
 const path = require('path');
 const NodeCache = require('node-cache');
 
 class AIService {
   constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
-    });
+    // Ollama configuration
+    this.ollamaUrl = process.env.OLLAMA_URL || 'http://localhost:11434';
+    this.ollamaModel = process.env.OLLAMA_MODEL || 'llama2';
     
     this.cache = new NodeCache({
       stdTTL: parseInt(process.env.CACHE_TTL) || 3600,
@@ -42,12 +42,21 @@ class AIService {
 
   async generateEmbedding(text) {
     try {
-      const response = await this.openai.embeddings.create({
-        model: process.env.EMBEDDING_MODEL || 'text-embedding-ada-002',
-        input: text
+      // For Ollama, we'll use a simple text-based similarity approach
+      // This is a simplified version - in production you might want to use
+      // a separate embedding model or service
+      const words = text.toLowerCase().split(/\s+/);
+      const wordCounts = {};
+      
+      words.forEach(word => {
+        wordCounts[word] = (wordCounts[word] || 0) + 1;
       });
       
-      return response.data[0].embedding;
+      // Create a simple vector representation
+      const allWords = Object.keys(wordCounts);
+      const vector = allWords.map(word => wordCounts[word] / words.length);
+      
+      return vector;
     } catch (error) {
       console.error('❌ Error generating embedding:', error);
       throw error;
@@ -115,6 +124,11 @@ class AIService {
         return cached;
       }
 
+      // Check if Ollama is available
+      if (!await this.isOllamaAvailable()) {
+        return this.getDemoRecommendation(context, farmerData, weatherData, marketData, language);
+      }
+
       // Build context from similar documents
       const similarDocs = await this.findSimilarDocuments(
         `${context.soilType} ${context.season} ${context.region} crops`
@@ -169,23 +183,12 @@ Be specific, practical, and consider the farmer's local conditions.`;
 
       const userPrompt = `Based on the above information, provide crop recommendations for this farmer. Focus on crops that are suitable for their soil type, season, and region. Consider market conditions and weather patterns.`;
 
-      const response = await this.openai.chat.completions.create({
-        model: process.env.OPENAI_MODEL || 'gpt-3.5-turbo',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        max_tokens: parseInt(process.env.OPENAI_MAX_TOKENS) || 1000,
-        temperature: parseFloat(process.env.OPENAI_TEMPERATURE) || 0.7,
-        top_p: parseFloat(process.env.OPENAI_TOP_P) || 0.9
-      });
-
-      const content = response.choices[0].message.content;
+      const response = await this.callOllama(systemPrompt + '\n\n' + userPrompt);
       
       // Try to parse JSON response
       let recommendation;
       try {
-        recommendation = JSON.parse(content);
+        recommendation = JSON.parse(response);
       } catch (parseError) {
         // If JSON parsing fails, create a structured response
         recommendation = {
@@ -218,6 +221,11 @@ Be specific, practical, and consider the farmer's local conditions.`;
 
   async chatResponse(message, sessionContext, language = 'English') {
     try {
+      // Check if Ollama is available
+      if (!await this.isOllamaAvailable()) {
+        return this.getDemoChatResponse(message, language);
+      }
+
       const languageInstructions = this.getLanguageInstructions(language);
       
       const systemPrompt = `You are an AI agricultural assistant helping farmers with crop-related questions. ${languageInstructions}
@@ -235,17 +243,9 @@ ${JSON.stringify(sessionContext, null, 2)}
 
 Respond in a conversational, helpful manner.`;
 
-      const response = await this.openai.chat.completions.create({
-        model: process.env.OPENAI_MODEL || 'gpt-3.5-turbo',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: message }
-        ],
-        max_tokens: parseInt(process.env.OPENAI_MAX_TOKENS) || 1000,
-        temperature: parseFloat(process.env.OPENAI_TEMPERATURE) || 0.7
-      });
-
-      return response.choices[0].message.content;
+      const response = await this.callOllama(systemPrompt + '\n\nUser: ' + message);
+      
+      return response;
       
     } catch (error) {
       console.error('❌ Error generating chat response:', error);
@@ -285,6 +285,38 @@ Respond in a conversational, helpful manner.`;
     }
   }
 
+  async isOllamaAvailable() {
+    try {
+      const response = await axios.get(`${this.ollamaUrl}/api/tags`, { timeout: 5000 });
+      return response.status === 200;
+    } catch (error) {
+      console.log('⚠️ Ollama not available, falling back to demo mode');
+      return false;
+    }
+  }
+
+  async callOllama(prompt) {
+    try {
+      const response = await axios.post(`${this.ollamaUrl}/api/generate`, {
+        model: this.ollamaModel,
+        prompt: prompt,
+        stream: false,
+        options: {
+          temperature: parseFloat(process.env.OLLAMA_TEMPERATURE) || 0.7,
+          top_p: parseFloat(process.env.OLLAMA_TOP_P) || 0.9,
+          max_tokens: parseInt(process.env.OLLAMA_MAX_TOKENS) || 1000
+        }
+      }, {
+        timeout: 30000 // 30 seconds timeout
+      });
+
+      return response.data.response;
+    } catch (error) {
+      console.error('❌ Error calling Ollama:', error.message);
+      throw error;
+    }
+  }
+
   getLanguageInstructions(language) {
     const instructions = {
       'English': 'Respond in English.',
@@ -294,6 +326,74 @@ Respond in a conversational, helpful manner.`;
     };
     
     return instructions[language] || instructions['English'];
+  }
+
+  getDemoRecommendation(context, farmerData, weatherData, marketData, language) {
+    const demoRecommendations = {
+      'English': {
+        recommendations: [
+          {
+            cropName: 'Rice',
+            suitability: 'High',
+            reason: 'Perfect for your clay soil and monsoon season',
+            expectedYield: '4-5 tons per acre',
+            marketPrice: '₹2,500 per quintal',
+            cultivationTips: ['Use certified seeds', 'Maintain proper water level', 'Apply balanced fertilizers']
+          },
+          {
+            cropName: 'Wheat',
+            suitability: 'Medium',
+            reason: 'Good for winter season in your region',
+            expectedYield: '3-4 tons per acre',
+            marketPrice: '₹2,200 per quintal',
+            cultivationTips: ['Prepare soil well', 'Use proper spacing', 'Control weeds']
+          }
+        ],
+        summary: 'Based on your soil type and location, rice and wheat are excellent choices for your farm.',
+        marketInsights: 'Current market prices are favorable for both crops.',
+        weatherConsiderations: 'Monitor rainfall patterns and adjust irrigation accordingly.'
+      },
+      'Hindi': {
+        recommendations: [
+          {
+            cropName: 'चावल',
+            suitability: 'उच्च',
+            reason: 'आपकी मिट्टी और मानसून के लिए उपयुक्त',
+            expectedYield: 'प्रति एकड़ 4-5 टन',
+            marketPrice: 'प्रति क्विंटल ₹2,500',
+            cultivationTips: ['प्रमाणित बीज का उपयोग करें', 'उचित जल स्तर बनाए रखें', 'संतुलित उर्वरक डालें']
+          }
+        ],
+        summary: 'आपकी मिट्टी और स्थान के आधार पर, चावल आपके खेत के लिए उत्कृष्ट विकल्प है।',
+        marketInsights: 'वर्तमान बाजार मूल्य दोनों फसलों के लिए अनुकूल हैं।',
+        weatherConsiderations: 'वर्षा पैटर्न की निगरानी करें और सिंचाई को तदनुसार समायोजित करें।'
+      }
+    };
+
+    return demoRecommendations[language] || demoRecommendations['English'];
+  }
+
+  getDemoChatResponse(message, language) {
+    const demoResponses = {
+      'English': [
+        "Hello! I'm your AI farming assistant. I can help you with crop recommendations, farming advice, and agricultural questions. What would you like to know?",
+        "Based on your farm details, I recommend focusing on crops suitable for your soil type and climate. Would you like specific recommendations?",
+        "I can help you with crop selection, farming techniques, pest management, and market information. What specific area interests you?",
+        "For better crop yields, consider factors like soil preparation, seed selection, irrigation, and timing. What crops are you planning to grow?",
+        "I'm here to help with all your farming questions. Feel free to ask about crop varieties, farming methods, or any agricultural concerns."
+      ],
+      'Hindi': [
+        "नमस्ते! मैं आपका AI कृषि सहायक हूं। मैं आपकी फसल सिफारिशों, कृषि सलाह और कृषि प्रश्नों में मदद कर सकता हूं। आप क्या जानना चाहते हैं?",
+        "आपके खेत के विवरण के आधार पर, मैं आपकी मिट्टी और जलवायु के लिए उपयुक्त फसलों पर ध्यान केंद्रित करने की सलाह देता हूं। क्या आप विशिष्ट सिफारिशें चाहते हैं?",
+        "मैं फसल चयन, कृषि तकनीक, कीट प्रबंधन और बाजार की जानकारी में आपकी मदद कर सकता हूं। कौन सा क्षेत्र आपको रुचिकर लगता है?",
+        "बेहतर फसल उत्पादन के लिए मिट्टी की तैयारी, बीज चयन, सिंचाई और समय जैसे कारकों पर विचार करें। आप कौन सी फसलें उगाने की योजना बना रहे हैं?",
+        "मैं आपके सभी कृषि प्रश्नों में मदद के लिए यहां हूं। फसल किस्मों, कृषि विधियों या किसी भी कृषि संबंधी चिंताओं के बारे में पूछने में संकोच न करें।"
+      ]
+    };
+
+    const responses = demoResponses[language] || demoResponses['English'];
+    const randomIndex = Math.floor(Math.random() * responses.length);
+    return responses[randomIndex];
   }
 
   getStats() {

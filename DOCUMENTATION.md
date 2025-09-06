@@ -39,8 +39,9 @@ The system consists of three main components:
 - Security and error handling
 - Integration with external services
 
-**AI Service (OpenAI Integration)**
-- GPT-3.5-turbo for intelligent responses
+**AI Service (Ollama + Local AI)**
+- FREE local AI using Ollama and Llama2
+- No API keys required for AI features
 - RAG (Retrieval-Augmented Generation) system
 - Vector database for crop knowledge
 - Multi-language AI responses
@@ -56,13 +57,41 @@ magita/
 └── setup-complete.sh # Setup script
 ```
 
+## Free Online Deployment
+
+The system can be deployed online for **FREE** using:
+
+- **Frontend**: Vercel (Free hosting)
+- **Backend**: Railway (Free tier)
+- **AI Service**: Railway (Free tier) 
+- **Database**: MongoDB Atlas (Free tier)
+- **AI**: Demo mode (No API keys required)
+
+### Quick Deployment
+
+1. **Run the deployment script:**
+   ```bash
+   ./deploy-online.sh
+   ```
+
+2. **Follow the prompts** to deploy to:
+   - Vercel (Frontend)
+   - Railway (Backend + AI Service)
+   - MongoDB Atlas (Database)
+
+3. **No API keys needed** - System works in demo mode
+
+### Cost: $0/month
+
+See `DEPLOYMENT_GUIDE.md` for detailed instructions.
+
 ## Setup Instructions
 
 ### Prerequisites
 - Node.js 18 or higher
 - MongoDB (local or cloud)
-- OpenAI API key
-- OpenWeatherMap API key
+- Ollama (for free local AI)
+- OpenWeatherMap API key (optional, for real weather data)
 
 ### Installation Steps
 

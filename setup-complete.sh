@@ -45,14 +45,38 @@ fi
 
 print_status "Node.js $(node -v) is installed"
 
-# Check if MongoDB is installed
-if ! command -v mongod &> /dev/null; then
-    print_warning "MongoDB is not installed. Please install MongoDB first."
-    print_info "Visit: https://docs.mongodb.com/manual/installation/"
-    exit 1
+# Check if Ollama is installed
+if ! command -v ollama &> /dev/null; then
+    print_warning "Ollama is not installed. Installing Ollama for free AI..."
+    curl -fsSL https://ollama.ai/install.sh | sh
+    if [ $? -eq 0 ]; then
+        print_status "Ollama installed successfully"
+    else
+        print_error "Failed to install Ollama"
+        exit 1
+    fi
+else
+    print_status "Ollama is already installed"
 fi
 
-print_status "MongoDB is installed"
+# Start Ollama service
+print_info "Starting Ollama service..."
+ollama serve &
+OLLAMA_PID=$!
+
+# Wait for Ollama to start
+print_info "Waiting for Ollama to start..."
+sleep 10
+
+# Download Llama2 model
+print_info "Downloading Llama2 model (this may take a few minutes)..."
+ollama pull llama2
+
+# Download Mistral model (alternative)
+print_info "Downloading Mistral model (alternative)..."
+ollama pull mistral
+
+print_status "Ollama setup complete"
 
 # Check if npm is installed
 if ! command -v npm &> /dev/null; then
@@ -166,7 +190,7 @@ echo ""
 print_info "Next Steps:"
 echo "1. Update environment variables in:"
 echo "   - backend/.env"
-echo "   - ai-service/.env"
+echo "   - ai-service/.env (Ollama is pre-configured)"
 echo "   - frontend/.env"
 echo ""
 echo "2. Start MongoDB service:"
@@ -176,7 +200,7 @@ echo "3. Start all services:"
 echo "   # Terminal 1 - Backend"
 echo "   cd backend && npm start"
 echo ""
-echo "   # Terminal 2 - AI Service"
+echo "   # Terminal 2 - AI Service (with Ollama)"
 echo "   cd ai-service && npm start"
 echo ""
 echo "   # Terminal 3 - Frontend"
@@ -188,7 +212,7 @@ echo ""
 print_info "🌐 Access the application at: http://localhost:3000"
 echo ""
 print_info "📚 Features Available:"
-echo "   ✅ AI-powered crop recommendations"
+echo "   ✅ FREE AI-powered crop recommendations (Ollama + Llama2)"
 echo "   ✅ ChatGPT-style chat interface"
 echo "   ✅ Voice input/output support"
 echo "   ✅ Multi-language support (English, Hindi, Telugu, Tamil)"
@@ -196,5 +220,11 @@ echo "   ✅ Real-time weather data"
 echo "   ✅ Market price trends"
 echo "   ✅ User authentication"
 echo "   ✅ Mobile-responsive design"
+echo "   ✅ No API keys required for AI features"
 echo ""
-print_status "Setup completed successfully! 🚀"
+print_info "🤖 AI Models Available:"
+echo "   - Llama2 (default, best for crop recommendations)"
+echo "   - Mistral (alternative, faster)"
+echo "   - All models run locally, completely free"
+echo ""
+print_info "🛑 To stop Ollama: kill $OLLAMA_PID"
