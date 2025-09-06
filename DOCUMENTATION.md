@@ -1,7 +1,7 @@
 # AI Crop Recommendation System
 ## Documentation
 
-Hey there! 👋 
+Hey there! 
 
 This is the documentation for our AI Crop Recommendation System - a project we built to help farmers get smart crop recommendations using AI. We wanted to make something that actually helps farmers without costing them money, so we built it to run completely free.
 
@@ -447,4 +447,4 @@ If you have questions or suggestions, feel free to open an issue on GitHub.
 
 Thanks for checking out our project! We hope it helps farmers make better decisions. 🌾
 
-**Last updated**: December 2024
+**Last updated**: Sep 2025
